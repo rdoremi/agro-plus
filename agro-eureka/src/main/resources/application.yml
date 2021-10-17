@@ -1,0 +1,21 @@
+server:
+  port: ${port:7001}
+
+
+eureka:
+  instance:
+    hostname: eureka${server.port}
+  other-port2: ${p2:7002}
+  other-port3: ${p3:7003}
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/,http://eureka${eureka.other-port2}:${eureka.other-port2}/eureka/,http://eureka${eureka.other-port3}:${eureka.other-port3}/eureka/
+spring:
+  application:
+    name: eureka
+
+
+
+

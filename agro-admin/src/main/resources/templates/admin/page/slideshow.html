@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+        <link rel="stylesheet" href="xadmin/css/font.css">
+        <link rel="stylesheet" href="xadmin/css/xadmin.css">
+        <script src="xadmin/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="xadmin/js/xadmin.js"></script>
+        <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <style>
+            * { margin: 0; padding: 0;}
+            .myscroll { width: auto; height: 300px; margin: 0 0;  line-height: 26px; font-size: 12px; overflow: hidden;}
+            .myscroll li { height: 26px; margin-left: 25px;}
+            .myscroll a { color: #333; text-decoration: none;}
+            .myscroll a:hover { color: #ED5565; text-decoration: underline;}
+        </style>
+        <!--<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>-->
+        <script src="js/jquery-3.3.1.js"></script>
+        <script src="js/scroll.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('.myscroll').myScroll({
+                    speed: 40, //数值越大，速度越慢
+                    rowHeight: 26 //li的高度
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">添加图片</div>
+                        <div class="layui-card-body ">
+                            <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"></label>
+                                        <div class="layui-upload">
+                                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                                            <div class="layui-upload-list" style="width: 200px;height: 150px;margin-left: 110px">
+                                                <img class="layui-upload-img" style="width: 200px;height:150px;"  id="demo1">
+                                                <p id="demoText"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6" style="margin-left: 100px">
+                                    <div class="layui-form-item" style="margin-top: 50px">
+
+
+                                        <select class="layui-input" id="stype">
+                                            <option>请选择类型</option>
+                                            <option value="100">视频</option>
+
+                                        </select>
+
+                                        <select style="margin-top: 10px" id="video-id" class="layui-input">
+                                            <option>请选择作品</option>
+
+                                        </select>
+
+                                        <button class="layui-btn" onclick="submit()" style="margin-top: 20px;margin-left: 45%">提交</button>
+                                    </div>
+                                </li>
+
+                            </ul>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">图片列表</div>
+                        <div class="layui-card-body ">
+                            <table class="layui-hide" id="user" lay-filter="test"></table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <script type="text/html" id="barDemo">
+            <!--<a  href="javascript:;" lay-event="stopOrStart" title="停用">
+                <i class="layui-icon">&#xe601;</i>
+            </a>-->
+            <!--<a title="编辑"  lay-event="edit"><i class="layui-icon">&#xe642;</i></a>-->
+            <a title="删除"  lay-event="del" href="javascript:;">
+                <i class="layui-icon">&#xe640;</i>
+            </a>
+        </script>
+        <script src="assets/layui/layui.js"></script>
+        <!--<script src="js/jquery-3.3.1.js"></script>-->
+        <script>
+            $.ajax({
+                url:"/video/getlist",
+                type:"get",
+                success:function (data) {
+                    $.each(data.data.list,function (i,obj) {
+                        $("#video-id").append("<option value='/pages/pages/detail/video/video-detail?id="+obj.id+"&userId="+obj.userId+"'>"+obj.username+"--"+obj.title+"</option>")
+                    })
+
+                }
+            })
+            function submit() {
+                var imgUrl = $("#demo1")[0].src;
+                var type = $("#stype").val()
+                var url = $("#video-id").val()
+                console.log(imgUrl+"  "+type+"  "+url)
+                $.ajax({
+                    url:"/slideshow/add",
+                    type:"post",
+                    data:{
+                        "imgUrl":imgUrl,
+                        "type":type,
+                        "url":url
+                    },
+                    success:function (data) {
+                        if(data.status == 200){
+                            layer.msg(data.msg, {icon: 6});
+                        }else{
+                            layer.msg(data.msg, {icon: 5});
+                        }
+                    }
+                })
+            }
+            layui.use(['form','upload'], function(){
+                var form = layui.form;
+                var upload = layui.upload;
+                //监听提交
+                /* form.on('submit(formDemo)', function(data){
+                     layer.msg(JSON.stringify(data.field));
+                     return false;
+                 });*/
+                var uploadInst = upload.render({
+                    elem: '#test1'
+                    ,url: '/file/oss_upload_cover_image' //改成您自己的上传接口
+                    ,before: function(obj){
+                        //预读本地文件示例，不支持ie8
+                        obj.preview(function(index, file, result){
+                            console.log("上传：")
+                            console.log(file)
+                            console.log(index)
+
+                            // console.log("src "+result)
+                        });
+                    }
+                    ,done: function(res){
+                        // var path = encodeURIComponent(res.data.path)
+                        console.log(res)
+                        $('#demo1').attr('src', res.data); //图片链接（base64）
+                        //如果上传失败
+                        if(res.code > 0){
+                            return layer.msg('上传失败');
+                        }
+                        //上传成功
+                    }
+                    ,error: function(){
+                        //演示失败状态，并实现重传
+                        var demoText = $('#demoText');
+                        demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                        demoText.find('.demo-reload').on('click', function(){
+                            uploadInst.upload();
+                        });
+                    }
+                });
+            });
+        </script>
+        <script th:inline="none">
+            layui.use(['table', 'element', 'layer', 'jquery', 'form'], function () {
+                //var $ = layui.jquery
+                var element = layui.element
+                var layer = layui.layer
+                var form = layui.form;
+                var table = layui.table;
+                var tableIns = table.render({
+                    elem: '#user'
+                    , url: '/slideshow/getlist'
+                    , limits: [10, 20, 30, 40, 50, 60, 70, 80, 90]
+
+                    , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                    , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                        title: '提示'
+                        , layEvent: 'LAYTABLE_TIPS'
+                        , icon: 'layui-icon-tips'
+                    }]
+                    , title: '标签列表'
+                    , totalRow: true
+                    , cols: [[
+                        {type: 'checkbox',width:"5%", fixed: 'left'}
+                        , {field: 'id', title: '序号', width: "5%", fixed: 'left', unresize: true,  type: "numbers"}
+                        , {field: 'imgUrl', title: '头像', width: "5%",templet:function (d) {
+                                return "<img style='height: 100%;width: 50px;' src="+d.imgUrl+">"
+                            }}
+                        , {field: 'url', title: '作品连接', width: "10%"}
+                        , {field: 'type', title: '类型', width: "7%",templet:function (d) {
+                                if(d.type == 100){
+                                    return "视频"
+                                }else {
+                                    return "文章"
+                                }
+                            }}
+                        , {field: 'createTime', title: '创建时间', width: "10%"}
+                        , {field: 'updateTime', title: '更新时间', width: "10%"}
+
+                        , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+                    ]]
+
+                    /*,response: {
+                        statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+                    }*/
+                    , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+
+                        return {
+                            "code": 0, //解析接口状态
+                            "msg": "数据显示", //解析提示文本
+                            "count": res.data.total, //解析数据长度
+                            "data": res.data //解析数据列表
+                        };
+                    },
+                    done:function () {
+
+                    },
+
+
+                });
+
+                //头工具栏事件
+                table.on('toolbar(test)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    if (obj.event === 'addLabel') {
+
+                    }
+
+                });
+
+                //监听行工具事件
+                table.on('tool(test)', function (obj) {
+                    var data = obj.data;
+                    //console.log(obj)
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $.ajax({
+                                url: "/slideshow/delete?id="+obj.data.id,
+                                type: "get",
+                                success: function (data) {
+                                    if (data.status == 200) {
+                                        layer.msg(data.msg, {icon: 6});
+                                        obj.del();
+                                        layer.close(index);
+                                    }else {
+                                        layer.msg(data.msg, {icon: 5});
+                                    }
+
+                                }
+                            })
+                        });
+                    } else if (obj.event === 'edit') {
+                        $("#user-role").children().remove()
+                        $.ajax({
+                            url:"/role/getlist",
+                            type:"get",
+                            dataType:"json",
+                            success:function (data) {
+
+                                $.each(data.data,function (i,obj) {
+                                    $("#user-role").append("<div  style='display: block'><input type='radio' style='display:block;'  value='"+obj.id+"'  name='roleId' lay-skin='primary' title='"+obj.name+"' >"+obj.name+"</div>")
+                                })
+                            }
+                        })
+                        $("#tel").val(obj.data.phone)
+                        $("#name").val(obj.data.username)
+                        $("#nickname").val(obj.data.nickname)
+                        $("#sex").val(obj.data.sex)
+
+
+
+                        $("#email").val(obj.data.email)
+                        // $("#idcart").val(obj.data.idcart)
+                        //$("#name").val(obj.data.name)
+
+
+                        layer.open({
+                            type: 1,
+                            title: "修改信息",
+                            area: ['400px', '200px'],
+
+                            content: $("#edit-manage")
+                            ,btn: ['确定', '取消'],
+                            yes: function (index, layero) {
+
+                            },
+                            btn1: function (index, layero) {
+                                layer.close(index)
+                            },
+                        });
+                    }
+                });
+                function getrole(value) {
+                    $.ajax({
+                        url:"/role/get/",
+                        type:"get",
+                        success:function (data) {
+                            $("#").append("<input type=\"checkbox\" name=\"like1[read]\" lay-skin=\"primary\" title=\""+data.name+"\">")
+                        }
+                    })
+
+                }
+
+            });
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,38 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+#        - id: admin-service
+#          uri: lb://admin-service
+#          predicates:
+#            - Path=/sys/**
+        #        - id: member-service
+        #            uri: lb://member-service
+        #            predicates:
+        #              - Path=/member/**
+        - id: video-service
+          uri: lb://video-service
+          predicates:
+            - Path=/video/**
+        - id: article-service
+            uri: lb://article-service
+            predicates:
+              - Path=/article/**
+        - id: common-service
+            uri: lb://common-service
+            predicates:
+              - Path=/article/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001:7001/eureka/,http://eureka7002:7002/eureka/,http://eureka7003:7003/eureka/
+
+
+
+
+

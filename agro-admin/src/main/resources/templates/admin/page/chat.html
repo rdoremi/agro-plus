@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天</title>
+   
+
+</head>
+<body>
+
+<input type="text" id="send" >
+<button onclick="sendMessage()">发送</button>
+    <div id="msg">
+
+    </div>
+</body>
+<script src="js/jquery-3.3.1.js"></script>
+<script>
+    var websocket = null
+    if('WebSocket' in window){
+        websocket = new WebSocket('ws://localhost:8080/webSocket/1')
+    }else {
+        console.log('浏览器不支持websocket')
+    }
+    websocket.onopen = function (ev) {
+        console.log("建立连接")
+    }
+    websocket.onclose = function (ev) {
+        console.log("连接关闭")
+    }
+    websocket.onmessage = function (ev) {
+        console.log("收到消息"+ev.data)
+        $("#msg").append("  <li><a>"+ev.data+"</a></li>")
+
+    }
+    websocket.onerror = function (ev) {
+        console.log("连接错误")
+    }
+    websocket.onbeforeunload = function () {
+        websocket.close()
+    }
+    function sendMessage() {
+        var date = new Date();
+        var time = date.getFullYear()
+            + '-' + (date.getMonth() + 1)
+            + '-' + date.getDate()+" "
+            +date.getHours()+":"
+            +date.getMinutes()+":"
+            +date.getSeconds()
+        var data = {
+            "receiveId":"obeXD5Oyq0Se9mgZ2N5mUboMIR5U",
+            "msg":$("#send").val(),
+            "time":time
+        }
+        websocket.send(JSON.stringify(data))
+    }
+</script>
+</html>

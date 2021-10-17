@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <!-- Basic Page Needs
+    ================================================== -->
+    <title>注册</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="TubeLite is - Professional A unique and beautiful collection of UI elements">
+    <link rel="icon" href="assets/images/favicon.png">
+
+    <!-- CSS 
+    ================================================== -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/night-mode.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/uikit/3.2.1/css/uikit.min.css">
+
+    <!-- icons
+    ================================================== -->
+    <link rel="stylesheet" href="assets/css/icons.css">
+
+    <!-- Google font
+    ================================================== -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+</head>
+
+
+<body>
+
+
+
+    <!-- Content
+    ================================================== -->
+    <div uk-height-viewport class="uk-flex uk-flex-middle">
+        <div class="uk-width-2-3@m uk-width-1-2@s m-auto rounded">
+            <div class="uk-child-width-1-2@m uk-grid-collapse bg-gradient-primary" uk-grid>
+
+                <!-- column one -->
+                <div class="uk-margin-auto-vertical uk-text-center uk-animation-scale-up p-3 uk-light">
+                    <img src="assets/images/logo-light-icon.png" width="45" alt="">
+                    <h1 class="mb-4 mt-2"> Argo</h1>
+                    <p>专致于农业技术的平台 </p>
+                </div>
+
+                <!-- column two -->
+                <div class="uk-card-default p-6">
+                    <div class="my-4 uk-text-center">
+                        <h3 class="mb-0">创建账号</h3>
+                        <!--<p class="my-2">Fill blank to create new account.</p>-->
+                    </div>
+                    <form class="uk-child-width-1-1 uk-grid-small" id="user-register" uk-grid>
+
+                        <div>
+                            <div class="uk-form-group">
+                                <label class="uk-form-label"> 用户名</label>
+
+                                <div class="uk-position-relative w-100">
+                                    <span class="uk-form-icon">
+                                        <i class="icon-feather-user"></i>
+                                    </span>
+                                    <input class="uk-input" name="username" type="text" >
+                                </div>
+
+                            </div>
+                        </div>
+                        <div>
+                            <div class="uk-form-group">
+                                <label class="uk-form-label"> 电话</label>
+
+                                <div class="uk-position-relative w-100">
+                                    <span class="uk-form-icon">
+                                        <i class="icon-feather-phone"></i>
+                                    </span>
+                                    <input class="uk-input" name="tel" type="tel" >
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="uk-width-1-2@s">
+                            <div class="uk-form-group">
+                                <label class="uk-form-label"> 密码</label>
+
+                                <div class="uk-position-relative w-100">
+                                    <span class="uk-form-icon">
+                                        <i class="icon-feather-lock"></i>
+                                    </span>
+                                    <input class="uk-input" name="password" type="password" >
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="uk-width-1-2@s">
+                            <div class="uk-form-group">
+                                <label class="uk-form-label"> 确认密码</label>
+
+                                <div class="uk-position-relative w-100">
+                                    <span class="uk-form-icon">
+                                        <i class="icon-feather-lock"></i>
+                                    </span>
+                                    <input class="uk-input" type="password" >
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="mt-4 uk-flex-middle uk-grid-small" uk-grid>
+                                <div class="uk-width-expand@s">
+                                    <p> 有账号？ <a href="login.html">去登录</a></p>
+                                </div>
+                                <div class="uk-width-auto@s">
+                                    <a  class="button primary" onclick="register()">提交</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div><!--  End column two -->
+ 
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -End
+    ================================================== -->
+
+
+    <!-- For Night mode -->
+    <script>
+        (function (window, document, undefined) {
+            'use strict';
+            if (!('localStorage' in window)) return;
+            var nightMode = localStorage.getItem('gmtNightMode');
+            if (nightMode) {
+                document.documentElement.className += ' night-mode';
+            }
+        })(window, document);
+
+
+        (function (window, document, undefined) {
+
+            'use strict';
+
+            // Feature test
+            if (!('localStorage' in window)) return;
+
+            // Get our newly insert toggle
+            var nightMode = document.querySelector('#night-mode');
+            if (!nightMode) return;
+
+            // When clicked, toggle night mode on or off
+            nightMode.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.documentElement.classList.toggle('night-mode');
+                if (document.documentElement.classList.contains('night-mode')) {
+                    localStorage.setItem('gmtNightMode', true);
+                    return;
+                }
+                localStorage.removeItem('gmtNightMode');
+            }, false);
+
+        })(window, document);
+    </script>
+
+
+    <!-- javaScripts
+        ================================================== -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/uikit/3.2.1/js/uikit.min.js"></script>
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/simplebar.js"></script>
+    <script src="assets/js/main.js"></script>
+<script>
+    function register() {
+        $.ajax({
+            url:"/fore/user/register",
+            type:"post",
+            data:$("#user-register").serialize(),
+            success:function (data) {
+                if(data.status == 0){
+                    alert(data.msg)
+                    window.location.href = "/login"
+                }else {
+                    alert(data.msg)
+                }
+            }
+        })
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+        <link rel="stylesheet" href="xadmin/css/font.css">
+        <link rel="stylesheet" href="xadmin/css/xadmin.css">
+        <script src="xadmin/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="xadmin/js/xadmin.js"></script>
+        <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <style>
+            * { margin: 0; padding: 0;}
+            .myscroll { width: auto; height: 300px; margin: 0 0;  line-height: 26px; font-size: 12px; overflow: hidden;}
+            .myscroll li { height: 26px; margin-left: 25px;}
+            .myscroll a { color: #333; text-decoration: none;}
+            .myscroll a:hover { color: #ED5565; text-decoration: underline;}
+        </style>
+        <!--<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>-->
+        <script src="js/jquery-3.3.1.js"></script>
+        <script src="js/scroll.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('.myscroll').myScroll({
+                    speed: 40, //数值越大，速度越慢
+                    rowHeight: 26 //li的高度
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">添加图书</div>
+                        <div class="layui-card-body ">
+                            <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"></label>
+                                        <div class="layui-upload">
+                                            <button type="button" class="layui-btn" id="test1">上传封面</button>
+                                            <div class="layui-upload-list" style="width: 200px;height: 150px;margin-left: 110px">
+                                                <img class="layui-upload-img" style="width: 200px;height:150px;"  id="cover">
+                                                <p id="demoText"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6" style="margin-left: 100px">
+                                    <div class="layui-form-item" style="margin-top: 50px">
+                                        <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
+
+                                        <!--<select class="layui-input">-->
+                                            <!--<option>请选择类型</option>-->
+                                            <!--<option>一</option>-->
+                                            <!--<option>二</option>-->
+                                        <!--</select>-->
+
+                                        <input placeholder="请输入书名" id="bookname" style="margin-top: 20px" class="layui-input"  type="text">
+
+                                        <a class="layui-btn" onclick="submit()" style="margin-top: 20px;margin-left: 45%">提交</a>
+                                    </div>
+                                </li>
+
+                            </ul>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">图书列表</div>
+                        <div class="layui-card-body ">
+                            <table class="layui-hide" id="user" lay-filter="test"></table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script type="text/html" id="toolbarDemo">
+
+            <div class="user-search">
+
+                <div class="layui-inline">
+                    <input class="layui-input" style="height: 33px" placeholder="图书名称" name="name"  id="demoReload" autocomplete="off">
+                </div>
+                <button class="layui-btn search layui-btn-warm layui-btn-sm  layui-icon" lay-event="search" data-type="reload">&#xe615;搜索</button>
+            </div>
+            <div style="clear: both"></div>
+        </script>
+        </div>
+        <script type="text/html" id="barDemo">
+            <!--<a  href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="see">
+                查看
+            </a>-->
+            <!--<a title="编辑"  lay-event="edit"><i class="layui-icon">&#xe642;</i></a>-->
+            <a title="删除"  lay-event="del" href="javascript:;">
+                <i class="layui-icon">&#xe640;</i>
+            </a>
+        </script>
+
+        <script src="assets/layui/layui.js"></script>
+        <!--<script src="js/jquery-3.3.1.js"></script>-->
+        <script>
+            var bookUrl = ""
+            layui.use(['form','upload'], function(){
+                var form = layui.form;
+                var upload = layui.upload;
+                //监听提交
+                /* form.on('submit(formDemo)', function(data){
+                     layer.msg(JSON.stringify(data.field));
+                     return false;
+                 });*/
+                upload.render({ //允许上传的文件后缀
+                    elem: '#test3'
+                    ,url: '/file/oss_upload_pdf' //改成您自己的上传接口
+                    ,accept: 'file' //普通文件
+                    ,exts: 'pdf' //只允许上传压缩文件
+                    ,done: function(res){
+                        layer.msg('上传成功');
+                        console.log(res)
+                        bookUrl = res.data
+                    }
+                });
+                var uploadInst = upload.render({
+                    elem: '#test1'
+                    ,url: '/file/oss_upload_cover_image' //改成您自己的上传接口
+                    ,before: function(obj){
+                        //预读本地文件示例，不支持ie8
+                        obj.preview(function(index, file, result){
+                            console.log("上传：")
+                            console.log(file)
+                            console.log(index)
+
+                            // console.log("src "+result)
+                        });
+                    }
+                    ,done: function(res){
+                        // var path = encodeURIComponent(res.data.path)
+                        console.log(res)
+                        $('#cover').attr('src', res.data); //图片链接（base64）
+                        //如果上传失败
+                        if(res.code > 0){
+                            return layer.msg('上传失败');
+                        }
+                        //上传成功
+                    }
+                    ,error: function(){
+                        //演示失败状态，并实现重传
+                        var demoText = $('#demoText');
+                        demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                        demoText.find('.demo-reload').on('click', function(){
+                            uploadInst.upload();
+                        });
+                    }
+                });
+            });
+            function submit() {
+                $.ajax({
+                    url:"book/add",
+                    type:"post",
+                    data:{
+                        "imgUrl":$("#cover")[0].src,
+                        "name":$("#bookname").val(),
+                        "url":bookUrl
+                    },
+                    success:function (data) {
+                        console.log(data)
+                        alert(data.msg)
+
+                    }
+                })
+            }
+        </script>
+        <script th:inline="none">
+            layui.use(['table', 'element', 'layer', 'jquery', 'form'], function () {
+                //var $ = layui.jquery
+                var element = layui.element
+                var layer = layui.layer
+                var form = layui.form;
+                var table = layui.table;
+                var tableIns = table.render({
+                    elem: '#user'
+                    , url: 'book/getlist'
+                    , limits: [10, 20, 30, 40, 50, 60, 70, 80, 90]
+                    , limit:20
+                    , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                    , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                        title: '提示'
+                        , layEvent: 'LAYTABLE_TIPS'
+                        , icon: 'layui-icon-tips'
+                    }]
+                    , title: '图书数据表'
+                    , totalRow: true
+                    ,id:"booklist"
+                    , cols: [[
+                        {type: 'checkbox',width:"5%", fixed: 'left'}
+                        , {field: 'id', title: '序号', width: "5%", fixed: 'left', unresize: true,  type: "numbers"}
+                        , {field: 'name', title: '名称', width: "20%"}
+                        , {field: 'imgUrl', title: '封面', width: "5%",templet:function (d) {
+                                return "<img style='height: 100%;width: 50px;' src="+d.imgUrl+">"
+                            }}
+                        , {field: 'createTime', title: '添加时间', width: "12%"}
+                        , {field: 'updateTime', title: '更新时间', width: "12%"}
+
+                        , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+                    ]]
+                    , page: true
+                    /*,response: {
+                        statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+                    }*/
+                    , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+
+                        return {
+                            "code": 0, //解析接口状态
+                            "msg": "数据显示", //解析提示文本
+                            "count": res.data.total, //解析数据长度
+                            "data": res.data.list //解析数据列表
+                        };
+                    },
+                    done:function () {
+
+                    },
+
+
+                });
+                var $ = layui.$, active = {
+                    reload: function(){
+                        var demoReload = $('#demoReload');
+
+                        //执行重载
+                        table.reload('booklist', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                            ,where: {
+
+                                name: demoReload.val()
+
+                            }
+                        }, 'data');
+                    }
+                };
+                table.on('toolbar(test)', function (obj) {
+                    console.log("adfa")
+                    switch (obj.event) {
+
+
+                        case 'LAYTABLE_TIPS':
+                            layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                            break;
+                       /* case "search":
+                            var type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
+                            break;*/
+                    }
+                    ;
+
+                });
+                //头工具栏事件
+                table.on('toolbar(test)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    if (obj.event === 'addLabel') {
+                        layer.open({
+                            type: 1,
+                            title: "添加标签",
+                            area: ['400px', '200px'],
+
+                            content: $("#add_lab")
+                            ,btn: ['确定', '取消'],
+                            yes: function (index, layero) {
+                                $.ajax({
+                                    url:"/label/add",
+                                    type:"post",
+                                    data:{
+                                        "name":$("input[name='name']").val()
+                                    },
+                                    success:function (data) {
+                                        if(data.status == 0){
+                                            layer.msg(data.msg, {icon: 6});
+                                            layer.close(index)
+                                        }else {
+                                            layer.msg(data.msg, {icon: 5});
+                                        }
+                                    }
+                                })
+                            },
+                            btn1: function (index, layero) {
+                                layer.close(index)
+                            },
+                        });
+                    }else if(obj.event === "search"){
+
+                        var type = $(this).data('type');
+                        active[type] ? active[type].call(this) : '';
+                    }
+
+                });
+
+                //监听行工具事件
+                table.on('tool(test)', function (obj) {
+                    var data = obj.data;
+                    //console.log(obj)
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $.ajax({
+                                url: "/book/delete?id="+obj.data.id,
+                                type: "get",
+                                success: function (data) {
+                                    if (data.status == 200) {
+                                        layer.msg(data.msg, {icon: 6});
+                                        obj.del();
+                                        layer.close(index);
+                                    }else {
+                                        layer.msg(data.msg, {icon: 5});
+                                    }
+
+                                }
+                            })
+                        });
+                    } else if (obj.event === 'see') {
+
+
+                        layer.open({
+                            type: 1,
+                            title: "修改信息",
+                            area: ['400px', '200px'],
+
+                            content: $("#edit-manage")
+                            ,btn: ['确定', '取消'],
+                            yes: function (index, layero) {
+
+                            },
+                            btn1: function (index, layero) {
+                                layer.close(index)
+                            },
+                        });
+                    }
+                });
+                function getrole(value) {
+
+
+                }
+
+            });
+
+        </script>
+    </body>
+</html>

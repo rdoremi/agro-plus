@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.agro.mapper.SysPermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.agro.pojo.entity.SysPermission" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="css" property="css" jdbcType="VARCHAR" />
+    <result column="href" property="href" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="permission" property="permission" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+    <select id="selectListByUserId" resultType="com.agro.pojo.entity.SysPermission">
+
+        SELECT DISTINCT sp.*
+        FROM sys_role_user sru
+        INNER JOIN sys_role_permission srp ON srp.role_id = sru.role_id
+        LEFT JOIN sys_permission sp ON srp.permission_id = sp.id
+        WHERE
+        sru.user_id = #{userId}
+
+    </select>
+</mapper>

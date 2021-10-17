@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" href="xadmin/laytree/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="xadmin/laytree/assets/common.css"/>
+    <link rel="stylesheet" href="xadmin/css/xadmin.css">
+    <script src="xadmin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="xadmin/js/xadmin.js"></script>
+</head>
+<body>
+<div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a >管理员</a>
+            <a>
+              <cite>管理员列表</cite></a>
+          </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn" id="btn-expand">全部展开</button>
+                        <button class="layui-btn" id="btn-fold">全部折叠</button>
+                        <button class="layui-btn" id="btn-refresh">刷新表格</button>
+                    </div>
+                    <div class="layui-btn-group">
+                        <a class="layui-btn layui-btn-normal" onclick="xadmin.open('添加父权限','/permission-add.html',600,400)">添加父权限</a>
+                        <a class="layui-btn layui-btn-normal" onclick="xadmin.open('添加子权限','/permission-add-child.html',600,400)">添加子权限</a>
+                    </div>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-hide" id="table1" lay-filter="table1"></table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-container layui-text">
+
+    <!--<div class="layui-btn-group">
+        <button class="layui-btn" id="btn-expand">全部展开</button>
+        <button class="layui-btn" id="btn-fold">全部折叠</button>
+        <button class="layui-btn" id="btn-refresh">刷新表格</button>
+    </div>-->
+    <!--&nbsp;-->
+    <!--<div class="layui-btn-group">
+        <a class="layui-btn layui-btn-normal" onclick="xadmin.open('添加父权限','/admin/permission-add.html',600,400)">添加父权限</a>
+        <a class="layui-btn layui-btn-normal" onclick="xadmin.open('添加子权限','/admin/permission-add-child.html',600,400)">添加子权限</a>
+
+    </div>-->
+
+    <!--<table id="table1" class="layui-table" lay-filter="table1"></table>-->
+</div>
+<!-- 操作列 -->
+<script type="text/html" id="oper-col">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<div class="layui-fluid" id="update-parent" style="display:none;">
+    <div class="layui-row">
+        <form id="parent-permission-form" class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    <span class="x-red">*</span>权限名
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    <span class="x-red">*</span>权&nbsp;&nbsp;&nbsp;限
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="permission"   name="permission" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+            <!--<div class="layui-form-item">
+                <button class="layui-btn" lay-submit="" lay-filter="add">增加</button>
+            </div>-->
+        </form>
+    </div>
+</div>
+
+<div id="update-child" style="display: none" class="layui-fluid">
+    <div class="layui-row">
+        <form id="child-permission-form" class="layui-form layui-form-pane">
+
+            <div class="layui-form-item">
+                <label for="name1" class="layui-form-label">
+                    <span class="x-red">*</span>权限名
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name1" name="name" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="permission1" class="layui-form-label">
+                    <span class="x-red">*</span>权&nbsp;&nbsp;&nbsp;限
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="permission1"   name="permission" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="type" class="layui-form-label">
+                    <span class="x-red">*</span>类&nbsp;&nbsp;&nbsp;型
+                </label>
+                <div class="layui-input-inline">
+                    <select id="type" name="type">
+                        <option value="1">菜单</option>
+                        <option value="2">按钮</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="url" class="layui-form-label">
+                    <span class="x-red">*</span>&nbsp;&nbsp;&nbsp;URL
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="url"   name="href" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <!--<div class="layui-form-item">
+                <button class="layui-btn" lay-submit="" lay-filter="add">增加</button>
+            </div>-->
+        </form>
+    </div>
+</div>
+<!--<script src="xadmin/laytree/assets/layui/layui.js"></script>-->
+<script th:inline="none">
+    layui.config({
+        base: 'xadmin/laytree/module/'
+    }).extend({
+        treetable: 'treetable-lay/treetable'
+    }).use(['layer', 'table', 'treetable'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        var renderTable = function () {
+            layer.load(2);
+            var tableIns = treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'id',
+                treePidName: 'parentId',
+                treeDefaultClose: true,
+                treeLinkage: false,
+                elem: '#table1',
+                url: '/permission/getlist',
+                page: false,
+                cols: [[
+                    {type: 'numbers',fixed:"left"},
+                    {field: 'name', title: '权限名称',width:"15%"},
+                    {field: 'id', title: 'id',width:"5%"},
+                    {field: 'parentId', title: 'pid',width:"5%"},
+                    {field: 'permission', title: '权限',width:"15%"},
+                    {field: 'href', title: 'URL',width:"20%"},
+                    {field: 'type', title: '类型',width:"10%",templet:function (d) {
+                            return d.type == 2?"按钮":"菜单";
+                        }},
+                    {templet:  '#oper-col', title: '操作',width:"25%"}
+                ]],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+        };
+
+        renderTable();
+
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#table1');
+        });
+
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#table1');
+        });
+
+        $('#btn-refresh').click(function () {
+            renderTable();
+        });
+
+        //监听工具条
+        table.on('tool(table1)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        url: "/permission/delete?id="+data.id,
+                        type: "get",
+                        success: function (data) {
+                            if (data.status == 200) {
+                                layer.msg(data.msg, {icon: 6});
+                                // obj.del();
+                                layer.close(index);
+                                renderTable();
+                            }else {
+                                layer.msg(data.msg, {icon: 5});
+                            }
+
+                        }
+                    })
+                });
+
+
+            } else if (layEvent === 'edit') {
+
+
+                if(data.parentId == 0){
+                    $("#name").val(data.name)
+                    $("#permission").val(data.permission)
+                    layer.open({
+                        type: 1,
+                        title: "修改信息",
+                        area: ['600px', '300px'],
+
+                        content: $("#update-parent")
+                        ,btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            $.ajax({
+                                url:"/permission/update",
+                                type:"post",
+                               // data:$("#parent-permission-form").serialize(),
+                                data:{
+                                    "id":data.id,
+                                    "name":$("#name").val(),
+                                    "permission":$("#permission").val(),
+                                    "parentId":data.pid,
+                                },
+                                success:function (data) {
+                                    if(data.status == 200){
+                                        layer.msg(data.msg, {icon: 6},function () {
+                                            // 获得frame索引
+                                            layer.close(index)
+                                            renderTable();
+                                        });
+                                    }else {
+                                        layer.alert(data.msg, {icon: 5},function () {
+
+                                        });
+                                    }
+                                }
+                            })
+                        },
+                        btn1: function (index, layero) {
+                            layer.close(index)
+                        },
+                    });
+                }else {
+                    $("#name1").val(data.name)
+                    $("#permission1").val(data.permission)
+                    //$("#type")[data.type].selected = true
+                    $("select option[value='"+data.type+"'] ").attr("selected",true)
+                    $("#url").val(data.href)
+                    layer.open({
+                        type: 1,
+                        title: "修改信息",
+                        area: ['600px', '500px'],
+
+                        content: $("#update-child")
+                        ,btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            $.ajax({
+                                url:"/permission/update",
+                                type:"post",
+                                //data:$("#child-permission-form").serialize(),
+                                data:{
+                                  "id":data.id,
+                                  "name":$("#name1").val(),
+                                  "permission":$("#permission1").val(),
+                                   "parentId":data.pid,
+                                  "type":$("#type").val(),
+                                  "href":$("#url").val(),
+                                },
+                                success:function (data) {
+                                    if(data.status == 200){
+                                        layer.msg(data.msg, {icon: 6},function () {
+                                            // 获得frame索引
+                                            layer.close(index)
+                                            renderTable();
+                                        });
+
+                                    }else {
+                                        layer.alert(data.msg, {icon: 5},function () {
+
+                                        });
+                                    }
+                                }
+                            })
+                        },
+                        btn1: function (index, layero) {
+                            layer.close(index)
+                        },
+                    });
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

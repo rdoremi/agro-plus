@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="x-admin-sm"  xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+    <link rel="stylesheet" href="xadmin/css/font.css">
+    <link rel="stylesheet" href="xadmin/css/xadmin.css">
+    <script src="xadmin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="xadmin/js/xadmin.js"></script>
+</head>
+
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">课程管理</a>
+                <a>
+                    <cite>未通过</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <!--<form class="layui-form layui-col-space5">-->
+                        <!--<div class="layui-input-inline layui-show-xs-block">-->
+                            <!--<input class="layui-input" placeholder="开始日" name="start" id="start"></div>-->
+                        <!--<div class="layui-input-inline layui-show-xs-block">-->
+                            <!--<input class="layui-input" placeholder="截止日" name="end" id="end"></div>-->
+
+                        <!--<div class="layui-input-inline layui-show-xs-block">-->
+                            <!--<input type="text" name="username" placeholder="搜索用户名" autocomplete="off" class="layui-input"></div>-->
+                        <!--<div class="layui-input-inline layui-show-xs-block">-->
+                            <!--<button class="layui-btn" lay-submit="" lay-filter="sreach">-->
+                                <!--<i class="layui-icon">&#xe615;</i></button>-->
+                        <!--</div>-->
+                    <!--</form>-->
+                </div>
+                <!--<div class="layui-card-header">
+                    <button class="layui-btn layui-btn-danger" onclick="delAll()">
+                        <i class="layui-icon"></i>批量删除</button>
+                    <button class="layui-btn" onclick="xadmin.open('添加用户','./order-add.html',800,600)">
+                        <i class="layui-icon"></i>添加</button></div>-->
+                <div class="layui-card-body ">
+                    <table id="video-list"class="layui-table " lay-filter="test">
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbarDemo">
+
+        <div class="user-search">
+
+            <div class="layui-inline">
+                <input class="layui-input" style="height: 33px" placeholder="课程名称" name="name"  id="demoReload" autocomplete="off">
+            </div>
+            <button class="layui-btn search layui-btn-warm layui-btn-sm  layui-icon" lay-event="search" data-type="reload">&#xe615;搜索</button>
+        </div>
+        <div style="clear: both"></div>
+    </script>
+</div>
+<script type="text/html" id="barDemo">
+    <a  href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="see">
+        查看
+    </a>
+    <a  class="layui-btn  layui-btn-xs" lay-event="pass">通过</a>
+
+</script>
+</body>
+
+<script th:inline="none">
+
+    layui.use(['table', 'element', 'layer', 'jquery', 'form'], function () {
+        //var $ = layui.jquery
+        var element = layui.element
+        var layer = layui.layer
+        var form = layui.form;
+        var table = layui.table;
+        var tableIns = table.render({
+            elem: '#video-list'
+            , url: '/manage/video/get_nopass_list'
+            , limits: [10, 20, 30, 40, 50, 60, 70, 80, 90]
+            , limit:20
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '提示'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-tips'
+            }]
+            , title: '用户数据表'
+            , totalRow: true
+            ,id:"courselist"
+            , cols: [[
+                {type: 'checkbox',width:"5%", fixed: 'left'}
+                , {field: 'id', title: '序号', width: "5%", fixed: 'left', unresize: true,  type: "numbers"}
+                , {field: 'userId', title: '用户ID', width: "5%"}
+                , {field: 'title', title: '标题', width: "15%"}
+                , {field: 'description', title: '描述', width: "15%"}
+                , {field: 'videoUrl', title: '链接地址', width: "15%"}
+
+                , {field: 'status', title: '状态', width: "5%",templet:function (d) {
+                        if(d.status == 200){
+                            return "通过"
+                        }
+                        if(d.status == 300){
+                            return "待审核"
+                        }
+                        return "未通过"
+
+                    }}
+                , {field: 'createTime', title: '创建时间', width: "10%"}
+                , {field: 'updateTime', title: '更新时间', width: "10%"}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+            ]]
+            , page: true
+            /*,response: {
+                statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+            }*/
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": "数据显示", //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.list //解析数据列表
+                };
+            },
+            done:function () {
+
+            }
+
+
+        });
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('courselist', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+
+                        name: demoReload.val()
+
+                    }
+                }, 'data');
+            }
+        };
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+
+
+                case 'LAYTABLE_TIPS':
+                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                    break;
+                case "search":
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+                break;
+            }
+            ;
+
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'not_pass') {
+                layer.confirm('确认不通过？', function (index) {
+                    $.ajax({
+                        url: "",
+                        type: "get",
+                        success: function (data) {
+                            if (data.status == 0) {
+                                layer.msg(data.msg, {icon: 6});
+                                obj.del();
+                                layer.close(index);
+                            }else {
+                                layer.msg(data.msg, {icon: 5});
+                            }
+
+                        }
+                    })
+                });
+            } else if (obj.event === 'pass') {
+                layer.confirm('确认通过？', function (index) {
+                    $.ajax({
+                        url: "/video/update_status?status=200&id="+obj.data.id,
+                        type: "get",
+                        success: function (data) {
+                            if (data.status == 200) {
+                                layer.msg(data.msg, {icon: 6});
+                                tableIns.reload()
+                                layer.close(index);
+                            }else {
+                                layer.msg(data.msg, {icon: 5});
+                            }
+
+                        }
+                    })
+                });
+            }else if (obj.event === 'see') {
+                layer.open({
+                    type: 1,
+                    title: "播放："+obj.data.title,
+                    area: ['780px', '540px'],
+
+                    content: "<video src='"+obj.data.videoUrl+"' controls preload=\"auto\" width=\"740\" height=\"400\"></video>"
+                    ,btn: ['关闭'],
+                    yes: function (index, layero) {
+                        layer.close(index)
+                    }
+                });
+            }
+        });
+        function getrole(value) {
+            $.ajax({
+                url:"/role/get/",
+                type:"get",
+                success:function (data) {
+                    $("#").append("<input type=\"checkbox\" name=\"like1[read]\" lay-skin=\"primary\" title=\""+data.name+"\">")
+                }
+            })
+
+        }
+
+    });
+    /*用户-停用*/
+    function member_stop(obj, id) {
+        layer.confirm('确认要停用吗？',
+            function(index) {
+
+                if ($(obj).attr('title') == '启用') {
+
+                    //发异步把用户状态进行更改
+                    $(obj).attr('title', '停用');
+                    $(obj).find('i').html('&#xe62f;');
+
+                    $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                    layer.msg('已停用!', {
+                        icon: 5,
+                        time: 1000
+                    });
+
+                } else {
+                    $(obj).attr('title', '启用');
+                    $(obj).find('i').html('&#xe601;');
+
+                    $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                    layer.msg('已启用!', {
+                        icon: 5,
+                        time: 1000
+                    });
+                }
+
+            });
+    }
+
+    /*用户-删除*/
+    function member_del(obj, id) {
+        layer.confirm('确认要删除吗？',
+            function(index) {
+                //发异步删除数据
+                $(obj).parents("tr").remove();
+                layer.msg('已删除!', {
+                    icon: 1,
+                    time: 1000
+                });
+            });
+    }
+
+    function delAll(argument) {
+
+        var data = tableCheck.getData();
+
+        layer.confirm('确认要删除吗？' + data,
+            function(index) {
+                //捉到所有被选中的，发异步进行删除
+                layer.msg('删除成功', {
+                    icon: 1
+                });
+                $(".layui-form-checked").not('.header').parents('tr').remove();
+            });
+    }</script>
+
+</html>

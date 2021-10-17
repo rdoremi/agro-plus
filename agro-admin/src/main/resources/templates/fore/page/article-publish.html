@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="icon" href="assets/images/favicon.png">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/night-mode.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/uikit/3.2.1/css/uikit.min.css">
+
+    <!-- icons
+    ================================================== -->
+    <link rel="stylesheet" href="assets/css/icons.css">
+
+    <!-- Google font
+    ================================================== -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/layui/css/layui.css">
+</head>
+<body>
+<div id="wrapper">
+
+    <header>
+        <div id="logo">
+            <a href="#"> <img src="assets/images/logos.png" alt=""></a>
+            <a href="#"> <img src="assets/images/logo-light.png" class="logo-inverse" alt=""></a>
+        </div>
+
+        <!-- form search-->
+        <div class="head_search" style="margin-left: 200px">
+            <form>
+                <div class="head_search_cont">
+                    <input value="" type="text" class="form-control"
+                           placeholder="搜索" autocomplete="off">
+                    <i class="s_icon uil-search-alt"></i>
+                </div>
+
+                <!-- Search box dropdown -->
+                <div uk-dropdown="pos: top;mode:click;animation: uk-animation-slide-bottom-small"
+                     class="dropdown-search">
+                    <!-- User menu -->
+
+                    <ul class="dropdown-search-list">
+                        <li class="list-title"> 最近搜索 </li>
+                        <li> <a href="page/video.html"> Adobe XD Design Free Tutorial .. </a> </li>
+                        <li> <a href="page/video.html"> How to create a basic Sticky HTML element .. </a>
+                        </li>
+                        <li> <a href="page/video.html"> Learn How to Prototype Faster with Mockplus! in 2020
+                        </a> </li>
+                        <li> <a href="page/video.html"> Adobe XD Design Tutorial Company Website Landing Page
+                            .. </a> </li>
+                        <div class="menu-divider">
+                            <li class="list-footer"> <a href="page/your-history.html"> Searches History </a></li>
+                        </div>
+                    </ul>
+
+
+                </div>
+
+
+            </form>
+        </div>
+
+        <!-- user icons -->
+        <div class="head_user">
+
+            <!--<a href="page-pricing.html" class="btn-upgrade uk-visible@s"> <i class="uil-bolt-alt"></i> Pro</a>-->
+            <a href="/upload" class="btn-upload uk-visible@s"> <i class="uil-cloud-upload"></i> 上传</a>
+            <a href="/publish_article" class="btn-upload uk-visible@s"> <i class="icon-feather-send"></i> 发表</a>
+
+
+            <a href="#video" class="opts_icon" uk-toggle> <i class="uil-youtube-alt"></i> <span>9+</span> </a>
+
+            <!-- videos feed  offcanvas-->
+            <div id="video" uk-offcanvas="overlay: true ;flip: true">
+                <div class="uk-offcanvas-bar uk-width-large">
+
+                    <h3> 您的订阅 </h3>
+                    <hr class="mb-3" style="margin:0 -20px">
+                    <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+                    <div class="video-list-small uk-child-width-1-1" id="head-my-subscription" uk-grid>
+
+                        <div>
+                            <a href="page/video.html" class="video-post video-post-list">
+                                <!-- Blog Post Thumbnail -->
+                                <div class="video-post-thumbnail">
+                                    <span class="video-post-count">1.4M</span>
+                                    <span class="video-post-time">23:00</span>
+                                    <span class="play-btn-trigger"></span>
+
+                                    <img src="assets/images/video-thumbal/2.png" alt="">
+                                </div>
+
+                                <!-- Blog Post Content -->
+                                <div class="video-post-content">
+                                    <h3> How to create a basic Sticky HTML element..</h3>
+                                    <img src="assets/images/avatars/avatar-3.jpg" alt="">
+                                    <span class="video-post-user">Jonathan Madano</span>
+                                    <span class="video-post-views">531k views</span>
+                                    <span class="video-post-date"> 2 weeks ago </span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="page/video.html" class="video-post video-post-list">
+                                <!-- Blog Post Thumbnail -->
+                                <div class="video-post-thumbnail">
+                                    <span class="video-post-count">2.7k</span>
+                                    <span class="video-post-time">40:00</span>
+                                    <span class="play-btn-trigger"></span>
+                                    <img src="assets/images/video-thumbal/1.png" alt="">
+                                </div>
+                                <!-- Blog Post Content -->
+                                <div class="video-post-content">
+                                    <h3> Learn how to create PHP singleton class </h3>
+                                    <img src="assets/images/avatars/avatar-2.jpg" alt="">
+                                    <span class="video-post-user">Stella Johnson</span>
+                                    <span class="video-post-views">938k views</span>
+                                    <span class="video-post-date"> 3 weeks ago </span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="page/video.html" class="video-post video-post-list">
+                                <!-- Blog Post Thumbnail -->
+                                <div class="video-post-thumbnail">
+                                    <span class="video-post-count">2.3M</span>
+                                    <span class="video-post-time">14:00</span>
+                                    <span class="play-btn-trigger"></span>
+                                    <img src="assets/images/video-thumbal/3.png" alt="">
+                                </div>
+                                <!-- Blog Post Content -->
+                                <div class="video-post-content">
+                                    <h3> Learn Creating Laravel Package Initializing ... </h3>
+                                    <img src="assets/images/avatars/avatar-5.jpg" alt="">
+                                    <span class="video-post-user">Alex Dolgove</span>
+                                    <span class="video-post-views">531k views</span>
+                                    <span class="video-post-date"> 2 weeks ago </span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="page/video.html" class="video-post video-post-list">
+                                <!-- Blog Post Thumbnail -->
+                                <div class="video-post-thumbnail">
+                                    <span class="video-post-count">1.4M</span>
+                                    <span class="video-post-time">23:00</span>
+                                    <span class="play-btn-trigger"></span>
+                                    <img src="assets/images/video-thumbal/4.png" alt="">
+                                </div>
+                                <!-- Blog Post Content -->
+                                <div class="video-post-content">
+                                    <h3> Learn how to upload files using Laravel .. </h3>
+                                    <img src="assets/images/avatars/avatar-4.jpg" alt="">
+                                    <span class="video-post-user">Adrian Mohani</span>
+                                    <span class="video-post-views">531k views</span>
+                                    <span class="video-post-date"> 2 weeks ago </span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="page/video.html" class="video-post video-post-list">
+                                <!-- Blog Post Thumbnail -->
+                                <div class="video-post-thumbnail">
+                                    <span class="video-post-count">1.4M</span>
+                                    <span class="video-post-time">23:00</span>
+                                    <span class="play-btn-trigger"></span>
+                                    <img src="assets/images/video-thumbal/2.png" alt="">
+                                </div>
+
+                                <!-- Blog Post Content -->
+                                <div class="video-post-content">
+                                    <h3> How to create a basic Sticky HTML element ..</h3>
+                                    <img src="assets/images/avatars/avatar-3.jpg" alt="">
+                                    <span class="video-post-user">Jonathan Madano</span>
+                                    <span class="video-post-views">531k views</span>
+                                    <span class="video-post-date"> 2 weeks ago </span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="page/video.html" class="video-post video-post-list">
+                                <!-- Blog Post Thumbnail -->
+                                <div class="video-post-thumbnail">
+                                    <span class="video-post-count">2.7k</span>
+                                    <span class="video-post-time">40:00</span>
+                                    <span class="play-btn-trigger"></span>
+                                    <img src="assets/images/video-thumbal/1.png" alt="">
+                                </div>
+                                <!-- Blog Post Content -->
+                                <div class="video-post-content">
+                                    <h3> Learn how to create PHP singleton class </h3>
+                                    <img src="assets/images/avatars/avatar-2.jpg" alt="">
+                                    <span class="video-post-user">Stella Johnson</span>
+                                    <span class="video-post-views">938k views</span>
+                                    <span class="video-post-date"> 3 weeks ago </span>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- browse apps  -->
+            <a href="#" class="opts_icon uk-visible@s"> <i class="uil-apps"></i> </a>
+
+            <!-- browse apps dropdown -->
+            <div uk-dropdown="pos: top;mode:click ; animation: uk-animation-scale-up" class="icon-browse">
+
+                <a href="#" class="icon-menu-item"> <i class="uil-shop"></i> Dashboard </a>
+                <a href="#" class="icon-menu-item"> <i class="uil-envelope-alt"></i> Messages </a>
+                <a href="#" class="icon-menu-item"> <i class="uil-bookmark"></i> Bookmark </a>
+                <a href="#" class="icon-menu-item"> <i class="uil-shopping-basket"></i> Cart </a>
+                <a href="#" class="icon-menu-item"> <i class="uil-shield-check"></i> Privacy </a>
+                <a href="#" class="icon-menu-item"> <i class="uil-bolt-alt"></i> Upgrade </a>
+                <a href="#" class="more-app"> More Features</a>
+            </div>
+
+
+            <!-- Message  notificiation dropdown -->
+            <a href="#" class="opts_icon"> <i class="uil-envelope-alt"></i> <span>4</span> </a>
+
+            <!-- Message  notificiation dropdown -->
+            <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small"
+                 class="dropdown-notifications">
+
+                <!-- notivication header -->
+                <div class="dropdown-notifications-headline">
+                    <h4>消息</h4>
+                    <a href="#">
+                        <i class="icon-feather-settings" uk-tooltip="title: Message settings ; pos: left"></i>
+                    </a>
+                </div>
+
+                <!-- notification contents -->
+                <div class="dropdown-notifications-content" data-simplebar>
+
+                    <!-- notiviation list -->
+                    <ul>
+                        <li class="notifications-not-read">
+                            <a href="#">
+                                        <span class="notification-avatar">
+                                            <img src="assets/images/avatars/avatar-2.jpg" alt="">
+                                        </span>
+                                <div class="notification-text notification-msg-text">
+                                    <strong>Jonathan Madano</strong>
+                                    <p>Okay.. Thanks for The Answer I will be waiting for your...</p>
+                                    <span class="time-ago"> 2 hours ago </span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                        <span class="notification-avatar">
+                                            <img src="assets/images/avatars/avatar-3.jpg" alt="">
+                                        </span>
+                                <div class="notification-text notification-msg-text">
+                                    <strong>Stella Johnson</strong>
+                                    <p> Alex will explain you how to keep your videos privatly and all that...
+                                    </p>
+                                    <span class="time-ago"> 7 hours ago </span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                        <span class="notification-avatar">
+                                            <img src="assets/images/avatars/avatar-1.jpg" alt="">
+                                        </span>
+                                <div class="notification-text notification-msg-text">
+                                    <strong>Alex Dolgove</strong>
+                                    <p> Alia just joined Messenger! Be the first to send a
+                                        welcome message..</p>
+                                    <span class="time-ago"> 19 hours ago </span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                        <span class="notification-avatar">
+                                            <img src="assets/images/avatars/avatar-4.jpg" alt="">
+                                        </span>
+                                <div class="notification-text notification-msg-text">
+                                    <strong>Adrian Mohani</strong>
+                                    <p> Okay.. Thanks for The Answer I will be waiting for your... </p>
+                                    <span class="time-ago"> Yesterday </span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="dropdown-notifications-footer">
+                    <a href="#"> sell all <i class="icon-line-awesome-long-arrow-right"></i> </a>
+                </div>
+
+
+            </div>
+
+
+            <!-- notificiation icon  -->
+            <a href="#" class="opts_icon"> <i class="uil-bell"></i> <span>3</span> </a>
+
+            <!-- notificiation dropdown -->
+            <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small"
+                 class="dropdown-notifications">
+
+                <!-- notivication header -->
+                <div class="dropdown-notifications-headline">
+                    <h4>通知 </h4>
+                    <a href="#">
+                        <i class="icon-feather-settings"
+                           uk-tooltip="title: Notifications settings ; pos: left"></i>
+                    </a>
+                </div>
+
+                <!-- notification contents -->
+                <div class="dropdown-notifications-content" data-simplebar>
+
+                    <!-- notiviation list -->
+                    <ul>
+                        <li class="notifications-not-read">
+                            <a href="#">
+                                        <span class="notification-icon">
+                                            <i class="icon-feather-thumbs-up"></i></span>
+                                <span class="notification-text">
+                                            <strong>Adrian Mohani</strong> Like Your Comment On Video
+                                            <span class="text-primary">Learn Prototype Faster</span>
+                                            <br> <span class="time-ago"> 9 hours ago </span>
+                                        </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                        <span class="notification-icon">
+                                            <i class="icon-feather-star"></i></span>
+                                <span class="notification-text">
+                                            <strong>Alex Dolgove</strong> Added New Review In Video
+                                            <span class="text-primary">Full Stack PHP Developer</span>
+                                            <br> <span class="time-ago"> 19 hours ago </span>
+                                        </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                        <span class="notification-icon">
+                                            <i class="icon-feather-message-circle"></i></span>
+                                <span class="notification-text">
+                                            <strong>Stella Johnson</strong> Replay Your Comments in
+                                            <span class="text-primary">Adobe XD Tutorial</span>
+                                            <br> <span class="time-ago"> 12 hours ago </span>
+                                        </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                        <span class="notification-icon">
+                                            <i class="icon-feather-share-2"></i></span>
+                                <span class="notification-text">
+                                            <strong>Adrian Mohani</strong> Like Your Comment On Video
+                                            <span class="text-primary">Learn Prototype Faster</span>
+                                            <br> <span class="time-ago"> Yesterday </span>
+                                        </span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- profile -image -->
+            <a class="opts_account"> <img src="assets/images/avatars/avatar-1.jpg" alt=""></a>
+
+            <!-- profile dropdown-->
+            <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small"
+                 class="dropdown-notifications small">
+
+                <!-- User Name / Avatar -->
+                <a href="#">
+
+                    <div class="dropdown-user-details">
+                        <div class="dropdown-user-avatar">
+                            <img src="assets/images/avatars/avatar-1.jpg" alt="">
+                        </div>
+                        <div class="dropdown-user-name">
+                            <span id="username"></span> <span> 已认证 <i class="uil-check"></i> </span>
+                        </div>
+                    </div>
+
+                </a>
+
+                <!-- User menu -->
+
+                <ul class="dropdown-user-menu">
+
+                    <li><a href="#"> <i class="uil-user"></i> 我的频道 </a> </li>
+                    <li><a href="#"> <i class="uil-thumbs-up"></i> 收藏 </a></li>
+                    <li><a href="#"> <i class="uil-history"></i> 稍后看 </a></li>
+                    <li><a href="#"> <i class="uil-cog"></i> 账号设置</a></li>
+
+                    <li>
+                        <a href="#" id="night-mode" class="btn-night-mode">
+                            <i class="icon-feather-moon"></i> 夜间模式
+                            <span class="btn-night-mode-switch">
+                                        <span class="uk-switch-button"></span>
+                                    </span>
+                        </a>
+                    </li>
+                    <div class="menu-divider">
+                        <li><a href="#"> <i class="icon-feather-help-circle"></i> 帮助</a>
+                        </li>
+                        <li><a href="#"> <i class="icon-feather-log-out"></i> 退出</a>
+                        </li>
+                    </div>
+                </ul>
+
+
+            </div>
+
+        </div>
+
+    </header>
+        <hr>
+
+    <div class="main_content" style="width: 60%;margin: 15px auto;">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签</label>
+                <div class="layui-input-block label-item">
+                   <!-- <input type="checkbox" name="like[write]" title="种植" checked>
+                    <input type="checkbox" name="like[read]" title="养殖" >
+                    <input type="checkbox" name="like[dai]" title="农机">
+                    <input type="checkbox" name="like[dai]" title="农咨">-->
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面</label>
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test1">上传封面</button>
+                    <div class="layui-upload-list" style="width: 100px;height: 80px;margin-left: 110px">
+                        <img class="layui-upload-img" style="width: 100px;height: 80px;"  id="demo1">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+
+            <hr/>
+            <textarea name="" id="edit" placeholder="请在此输入内容"></textarea>
+
+        </form>
+        <div class="layui-btn-group" style="margin-top: 10px;margin-left: 980px">
+            <button class="layui-btn" lay-event="clearContent">取消</button>
+            <button class="layui-btn layui-btn-warm" lay-event="getText">发表</button>
+        </div>
+        <!--<div class="layui-btn-group" style="margin-top: 10px;margin-left: 85%">
+            <button class="layui-btn layui-btn-warm"  onclick="submit()" lay-event="submit">发表</button>
+        </div>-->
+    </div>
+</div>
+
+
+
+
+</body>
+<script src="assets/layui/layui.js"></script>
+<script src="assets/js/jquery-3.3.1.min.js"></script>
+<script>
+    console.log(sessionStorage.getItem("user"))
+    if(sessionStorage.getItem("user") == null){
+        window.location.href = "/login"
+    }
+    $("#username").text(sessionStorage.getItem("user"))
+    //Demo
+    layui.use(['form','upload'], function(){
+        var form = layui.form;
+        var upload = layui.upload;
+        //监听提交
+       /* form.on('submit(formDemo)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });*/
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: '/file/oss_upload_cover_image' //改成您自己的上传接口
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    console.log("上传：")
+                    console.log(file)
+                    console.log(index)
+
+                    // console.log("src "+result)
+                });
+            }
+            ,done: function(res){
+                // var path = encodeURIComponent(res.data.path)
+                console.log(res)
+                $('#demo1').attr('src', res.data); //图片链接（base64）
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+    $.ajax({
+        url:"/label/getlist",
+        type:"get",
+        success:function (data) {
+            $.each(data.data,function (i, obj) {
+                console.log(obj)
+                $(".label-item").append('<input type="checkbox" name="label" value="'+obj.name+'" title="'+obj.name+'">')
+            })
+        }
+    })
+</script>
+<script src="https://cdn.bootcdn.net/ajax/libs/uikit/3.2.1/js/uikit.min.js"></script>
+<script src="assets/js/simplebar.js"></script>
+
+<script src="assets/js/main.js"></script>
+<script>
+
+    /^http(s*):\/\//.test(location.href) || alert('请先部署到 localhost 下再访问');
+    layui.extend({
+        tinymce: '{/}assets/tinymce/tinymce'
+    }).use(['tinymce', 'util', 'layer','form'], function () {
+        var form = layui.form;
+
+        var tinymce = layui.tinymce
+
+        var util = layui.util;
+
+        var edit = tinymce.render({
+            elem: "#edit"
+            , height: 600
+            // ...
+            // 其余配置可参考官方文档
+        },(opt)=>{
+            //加载完成后回调
+        });
+
+
+
+        util.event('lay-event', {
+            getContent:() => {
+            var content = tinymce.get('#edit').getContent()
+            layer.alert(content)
+            console.log(content)
+    },
+
+        clearContent:() => {
+            tinymce.get('#edit').setContent('')
+            window.location.href="/home"
+        },
+        getText:() => {
+            var content = tinymce.get('#edit').getContent()
+            console.log(content)
+            var lb = [];
+            $.each($('input:checkbox:checked'),function(){
+                /*window.alert("你选了："+
+                    $('input[type=checkbox]:checked').length+"个，其中有："+$(this).val());*/
+                lb.push($(this).val())
+
+            });
+            $.ajax({
+                url:"/fore/article/add",
+                type:"post",
+                data:{
+                    "content":content,
+                    "label":lb.toString(),
+                    "title":$("input[name='title']").val(),
+                    "userId":sessionStorage.getItem("userId"),
+                    "cover":$("#demo1")[0].src
+        },
+                success:function (data) {
+                    console.log(data)
+                    if(data.status == 200){
+                        layer.alert(data.msg)
+                        window.location.reload()
+                        // tinymce.get('#edit').setContent('')
+                    }
+
+                }
+            })
+
+
+        }
+    });
+
+
+    });
+    
+
+
+
+
+</script>
+</html>

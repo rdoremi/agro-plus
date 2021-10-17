@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+    <link rel="stylesheet" href="xadmin/css/font.css">
+    <link rel="stylesheet" href="xadmin/css/xadmin.css">
+    <script src="xadmin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="xadmin/js/xadmin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a>管理员管理</a>
+            <a>
+              <cite>角色管理</cite></a>
+          </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <!--<div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input"  autocomplete="off" placeholder="开始日" name="start" id="start">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input"  autocomplete="off" placeholder="截止日" name="end" id="end">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>-->
+                <div class="layui-card-header">
+                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+                    <button class="layui-btn" onclick="xadmin.open('添加角色','/role-add',800,600)"><i class="layui-icon"></i>添加</button>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-hide" id="adminRole" lay-filter="test"></table>
+                </div>
+                <!--<div class="layui-card-body ">
+                    <div class="page">
+                        <div>
+                          <a class="prev" href="">&lt;&lt;</a>
+                          <a class="num" href="">1</a>
+                          <span class="current">2</span>
+                          <a class="num" href="">3</a>
+                          <a class="num" href="">489</a>
+                          <a class="next" href="">&gt;&gt;</a>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="toolbarDemo1">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-icon" id="add" lay-event="addRole">&#xe654;添加</button>
+
+    </div>
+</script>
+<div id="role-update" style="display: none;">
+    <div class="layui-fluid">
+        <div class="layui-row">
+            <form id="role-permission" class="layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <label for="name" class="layui-form-label">
+                        <span class="x-red">*</span>角色名
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="name" name="name" required="" lay-verify="required"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <!--<div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">
+                        拥有权限
+                    </label>
+                    <table class="layui-table layui-input-block">
+                        <tbody id="permission-get">
+
+                        </tbody>
+                    </table>
+                </div>-->
+                <div class="layui-form-item layui-form-text">
+                    <label for="desc" class="layui-form-label">
+                        描述
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" id="desc" name="description" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+               <!-- <div class="layui-form-item">
+                    <button class="layui-btn" lay-submit="" lay-filter="add">修改</button>
+                </div>-->
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+
+    <a title="编辑"  lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
+    <a title="删除"  lay-event="del" href="javascript:;">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
+</script>
+
+</body>
+<script th:inline="none">
+    layui.use(['table', 'element', 'layer', 'jquery', 'form'], function () {
+        //var $ = layui.jquery
+        var element = layui.element
+        var layer = layui.layer
+        var form = layui.form;
+        var table = layui.table;
+        var tableIns = table.render({
+            elem: '#adminRole'
+            , url: '/role/getlist'
+
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '提示'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-tips'
+            }]
+            , title: '用户数据表'
+            , totalRow: true
+            , cols: [[
+                {type: 'checkbox', width:"5%", fixed: 'left'}
+                , {field: 'id', title: '序号', width: "5%", unresize: true, sort: true, type: "numbers"}
+                , {field: 'name', title: '角色名称', width: "15%"}
+                , {field: 'description', title: '角色描述', width: "30%"}
+                , {field: 'createTime', title: '创建时间', width: "10%"}
+                , {field: 'updateTime', title: '更新时间', width: "10%"}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+            ]]
+
+            /*,response: {
+                statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+            }*/
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": "数据显示", //解析提示文本
+                    "count": 0, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+        });
+        table.on('toolbar(test)',function (obj) {
+         if(obj.event === 'addRole'){
+             $.ajax({
+                 url:"/permission/getTreelist",
+                 type:"get",
+                 success:function (data) {
+                     console.log(data.data)
+                     $.each(data.data,function (i,obj) {
+                         var tr = "<tr>"
+                         var bd = "<td><input type='checkbox' name='permission' lay-skin='primary' value='"+obj.id+"' lay-filter='father' title='"+obj.name+"'></td>"
+
+                         var td = "<td>"
+                         var div = "<div class='layui-input-block'>";
+                         var input = []
+                         $.each(obj.clist,function (j,o) {
+                            var inpt= "<input name='idList' lay-skin='primary' value='"+o.id+"' type='checkbox' title='"+o.name+"' >"
+                            input.push(inpt)
+                         })
+                         var inp = input.toString().replace(new RegExp(/,/g),"")
+
+                         var divEnd  = "</div>"
+                         var end = "</td>"
+                         var bdEnd = "</tr>"
+                        // $("#permission-get").append(tr+bd+td+div+inp+divEnd+end+bdEnd)
+
+                     })
+                 }
+             })
+             layer.open({
+                 type: 1,
+                 title: "添加角色",
+                 area: ['800px', '700px'],
+
+                 content: $("#role-add")
+                 ,btn: ['确定', '取消'],
+                 yes: function (index, layero) {
+
+                 },
+                 btn1: function (index, layero) {
+                     $("#permission-get").children.remove()
+                     window.location.reload()
+                     layer.close(index)
+                 },
+             });
+            }
+        })
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        url: "/role/delete?id="+obj.data.id,
+
+                        type: "get",
+                        success: function (data) {
+                            if (data.status == 200) {
+                                layer.msg(data.msg, {icon: 6});
+                                obj.del();
+                                layer.close(index);
+                                tableIns.reload()
+                            }else {
+                                layer.msg(data.msg, {icon: 5});
+                            }
+
+                        }
+                    })
+                });
+            } else if (obj.event === 'edit') {
+
+               $("#name").val(obj.data.name)
+               $("#desc").val(obj.data.description)
+                var tabBady = "";
+                /*var permissionList =[]
+                var dataList = []
+
+                $.ajax({
+                    url:"/permission/getPermissionByRoleId?roleId="+obj.data.id,
+                    success:function (data) {
+
+                        permissionList = data.data
+                    }
+                })
+                console.log(permissionList)*/
+                $.ajax({
+                    url: "/permission/getTreelist",
+                    type: "get",
+                    success: function (data) {
+
+                        /*$.each(permissionList, function (i, data1) {
+                            console.log("data1 "+data1)
+                            $.each(data.data, function (i, obj) {
+                                var item = {}
+                                if(data1.id == obj.id){
+                                    item = {"id": obj.id, "name": obj.name,"checked":true, "clist": obj.clist}
+                                }else {
+                                    item = {"id": obj.id, "name": obj.name,"checked":false, "clist": obj.clist}
+                                }
+                                dataList.push(item)
+
+                            })
+                        })
+                        console.log(dataList)*/
+                        $.each(data.data, function (i, oitem) {
+
+
+
+                            var tr = "<tr>"
+                            var bd = "<td><input type='checkbox' name='idList' lay-skin='primary' value='" + oitem.id + "' lay-filter='father' title='" + oitem.name + "'></td>"
+
+                            var td = "<td>"
+                            var div = "<div class='layui-input-block'>";
+                            var input = []
+                            $.each(oitem.clist, function (j, o) {
+                                var ipt = "<input name='idList' lay-skin='primary' value='" + o.id + "' readonly type='checkbox' title='" + o.name + "' />"
+                                // input[j] = "<input name='idList' lay-skin='primary' value='"+o.id+"' type='checkbox' title='"+o.name+"' >"
+                                // input.push("<input name='idList' lay-skin='primary' value='" + o.id + "' type='checkbox' title='" + o.name + "' >")
+                                input.push(ipt)
+
+                            })
+                            var inp = input.toString().replace(new RegExp(/,/g), "")
+
+                            var divEnd = "</div>"
+                            var end = "</td>"
+                            var bdEnd = "</tr>"
+
+                            // console.log(tr + bd + td + div + inp + divEnd + end + bdEnd)
+                            tabBady = tr + bd + td + div + inp + divEnd + end + bdEnd
+
+                             //$("#permission-get").append(tabBady)
+
+                        })
+
+                    }
+                })
+
+                layer.open({
+                    type: 1,
+                    title: "修改信息",
+                    area: ['800px', '400px'],
+
+                    content: $("#role-update")
+                    ,btn: ['确定', '取消'],
+                    yes: function (index, layero) {
+
+                        $.ajax({
+                            url:"/role/update",
+                            type:"post",
+                            data:{
+                                "id":obj.data.id,
+                                "name":$("#name").val(),
+                                "description":$("#desc").val()
+                            },
+                            success:function (data) {
+                                if (data.status == 200) {
+                                    layer.msg(data.msg, {icon: 6});
+
+                                    layer.close(index);
+                                    tableIns.reload()
+                                }else {
+                                    layer.msg(data.msg, {icon: 5});
+                                }
+                            }
+                        })
+
+                        $("#permission-get").children().remove()
+                        layer.close(index)
+                    },
+                    btn1: function (index, layero) {
+                        $("#permission-get").children().remove()
+                        layer.close(index)
+
+                    },
+                });
+            }
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+    });
+
+    /*用户-停用*/
+    function member_stop(obj,id){
+        layer.confirm('确认要停用吗？',function(index){
+
+            if($(obj).attr('title')=='启用'){
+
+                //发异步把用户状态进行更改
+                $(obj).attr('title','停用')
+                $(obj).find('i').html('&#xe62f;');
+
+                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                layer.msg('已停用!',{icon: 5,time:1000});
+
+            }else{
+                $(obj).attr('title','启用')
+                $(obj).find('i').html('&#xe601;');
+
+                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                layer.msg('已启用!',{icon: 5,time:1000});
+            }
+
+        });
+    }
+
+    /*用户-删除*/
+    function member_del(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            //发异步删除数据
+            $(obj).parents("tr").remove();
+            layer.msg('已删除!',{icon:1,time:1000});
+        });
+    }
+
+
+
+    function delAll (argument) {
+
+        var data = tableCheck.getData();
+
+        layer.confirm('确认要删除吗？'+data,function(index){
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+            $(".layui-form-checked").not('.header').parents('tr').remove();
+        });
+    }
+</script>
+<script>var _hmt = _hmt || []; (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();</script>
+</html>

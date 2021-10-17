@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.agro.mapper.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.agro.pojo.entity.Article" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="label" jdbcType="VARCHAR" property="label" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="cover" jdbcType="LONGVARCHAR" property="cover" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_list">
+    id, user_id, title, label, "desc", cover, content, create_time, update_time
+  </sql>
+  <update id="update">
+    UPDATE article SET title = #{title},`desc` = #{desc},label = #{label},`cover` = #{cover},
+    `content` = #{content} WHERE id = #{id}
+  </update>
+  <select id="selectAlls" resultMap="BaseResultMap">
+    SELECT * FROM article ORDER BY create_time DESC
+  </select>
+  <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+    SELECT * FROM article WHERE id = #{id}
+  </select>
+    <select id="selectAllsByName" resultMap="BaseResultMap">
+       SELECT * FROM article WHERE title LIKE concat('%',#{title},'%') ORDER BY create_time DESC
+    </select>
+
+    <insert id="insert">
+    insert into article (id, user_id, title, `label`, `desc`, `cover`, `content`, create_time, update_time)
+     values (#{id},#{userId},#{title},#{label},#{desc},#{cover},#{content},now(),now());
+  </insert>
+</mapper>
